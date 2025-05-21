@@ -1,5 +1,5 @@
 import { FaPlus } from "react-icons/fa6";
-import { Button, Dropdown } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { CiSearch } from "react-icons/ci";
 
 export default function AssignmentControls() {
