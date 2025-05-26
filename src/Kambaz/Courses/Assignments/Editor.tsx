@@ -1,23 +1,20 @@
-import { FormGroup, FormLabel, FormControl, Form, Col, Row, Button, } from "react-bootstrap"
+import { FormGroup, FormLabel, FormControl, Form, Col, Row, } from "react-bootstrap"
+import { Link, useParams } from "react-router";
+import * as db from "../../Database";
+
 export default function AssignmentEditor() {
+  const { aid } =  useParams()
+  const assignment = db.assignments.find((course) => aid === course._id)
     return (
       <div id="wd-assignments-editor">
         <FormGroup controlId="wd-name">
             <FormLabel>Assignment</FormLabel>
-            <FormControl type="name" placeholder="A1" />
+            <FormControl type="name" placeholder={assignment?.title} />
         </FormGroup>
         <br />
         <FormGroup className="mb-3" controlId="wd-description">
             <FormControl as="textarea" rows={3}
-            placeholder="
-            The assignment is available online
-            Submit a link to the landing page of your Web application running on Netlify. 
-            The landing page should include the following: 
-            -Your full name and section 
-            -Links to each of the lab assignments 
-            -Link to the Kanbas application 
-            -Links to all relevant source code repositiories 
-            The Kanbas applciation should include a link to navigate back to the landing page." />
+            placeholder={assignment?.description} />
         </FormGroup>
         <br />
         
@@ -27,7 +24,7 @@ export default function AssignmentEditor() {
           Points
         </Form.Label>
         <Col sm={10}>
-          <Form.Control type="number" defaultValue={100} />
+          <Form.Control type="number" defaultValue={assignment?.points} />
         </Col>
       </Form.Group>
 
@@ -87,29 +84,28 @@ export default function AssignmentEditor() {
 
           <Form.Group className="mb-3" controlId="wd-due-date">
             <Form.Label  className="fw-bold" >Due</Form.Label>
-            <Form.Control type="date" defaultValue="2024-05-13" />
+            <Form.Control type="date" defaultValue={assignment?.due_date} />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="wd-available-from">
             <Form.Label  className="fw-bold">Available from</Form.Label>
-            <Form.Control type="date" defaultValue="2024-05-01" />
+            <Form.Control type="date" defaultValue={assignment?.available_date} />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="wd-available-until">
             <Form.Label className="fw-bold">Until</Form.Label>
-            <Form.Control type="date" defaultValue="2024-05-20" />
+            <Form.Control type="date" defaultValue={assignment?.until_date} />
           </Form.Group>
         </Col>
       </Row>
       
     </Form>
     <hr />
-    <Button variant="danger" size="lg" className="me-1 float-end" id="wd-save-assignment-edit">
+    <Link className="btn btn-danger btn-lg me-1 float-end" id="wd-save-assignment-edit" to={`/Kambaz/Courses/${assignment?.course}/Assignments/`}>
        Save
-     </Button>
-     <Button variant="secondary" size="lg" className="me-1 float-end" id="wd-cancel-assignment-edit">
+     </Link>
+     <Link className="btn btn-secondary btn-lg me-1 float-end" id="wd-save-assignment-edit" to={`/Kambaz/Courses/${assignment?.course}/Assignments/`}>
        Cancel
-     </Button>
+     </Link>
     </div>
   );}
-  
