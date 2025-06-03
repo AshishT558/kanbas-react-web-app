@@ -6,15 +6,19 @@ import AssignmentHeaderButtons from "./AssignmentHeaderButtons";
 import { FaRegEdit } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useParams } from "react-router";
-import * as db from "../../Database";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteAssignment } from "./reducer";
 
 
 export default function Assignments() {
+    const dispatch = useDispatch()
     const { cid } = useParams();
-    const assignments = db.assignments;
+    const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const { currentUser } = useSelector((state: any) => state.accountReducer);
+    const isFaculty = (currentUser.role === "FACULTY") 
     return (
       <div id="wd-assignments" className="ms-5">
-        <AssignmentControls />
+        <AssignmentControls/>
         <br /><br /><br /><br />
 
         <ListGroup id="wd-assignment-list">
@@ -31,7 +35,7 @@ export default function Assignments() {
                 
                 <BsGripVertical className="me-2 fs-3" /> 
                 <FaRegEdit className="me-4" style={{color: "green"}}/>  
-                <a href={`#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}`}
+                <a href={isFaculty ? `#/Kambaz/Courses/${assignment.course}/Assignments/${assignment._id}` : `#/Kambaz/Courses/${assignment.course}/Assignments/`}
                     className="wd-assignment-link" style={{textDecoration: "none"}}>
                     <span className="fw-bold text-black">A{assignment.assignment_num}: {assignment.title}</span>
                     </a>  
@@ -39,7 +43,7 @@ export default function Assignments() {
                     <div><span className="text-danger">Multiple Modules</span> | <span className="fw-bold">Not Available until </span>{assignment.available_date} |</div>
                     <div><span className="fw-bold">Due </span> {assignment.due_date} | {assignment.points} pts</div>
                     </div>
-                <AssignmentControlButtons />
+                <AssignmentControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => dispatch(deleteAssignment(assignmentId))} />
               </ListGroup.Item>
               ))}
               </ListGroup>
