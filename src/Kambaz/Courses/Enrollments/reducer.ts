@@ -1,15 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments } from "../../Database";
 
 const initialState = {
-    enrollments: enrollments,
+    enrollments: [],
   };
 const enrollmentsSlice = createSlice({
   name: "enrollments",
   initialState,
   reducers: {
+    setEnrollments: (state, { payload }) => {
+      state.enrollments = payload;
+    },
     addEnrollment: (state, { payload }) => {
-      state.enrollments = [...state.enrollments, payload];
+      state.enrollments = [...state.enrollments, payload] as any;
     },
     removeEnrollment: (state, { payload: enrollmentId }) => {
       state.enrollments = state.enrollments.filter(
@@ -18,5 +20,5 @@ const enrollmentsSlice = createSlice({
   },
 });
 
-export const { addEnrollment, removeEnrollment } = enrollmentsSlice.actions;
+export const { addEnrollment, removeEnrollment, setEnrollments } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;

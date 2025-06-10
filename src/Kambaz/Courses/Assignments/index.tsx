@@ -7,13 +7,27 @@ import { FaRegEdit } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { useParams } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteAssignment } from "./reducer";
-
+import { setAssignments, deleteAssignment } from "./reducer";
+import * as coursesClient from "../../Courses/client"
+import { useEffect } from "react";
+import * as assignmentsClient from "./client"
 
 export default function Assignments() {
     const dispatch = useDispatch()
     const { cid } = useParams();
     const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+    const fetchAssignments = async () => {
+      const assignments = await coursesClient.findAssignmentsForCourse(cid as string);
+      dispatch(setAssignments(assignments));
+    };
+    useEffect(() => {
+      fetchAssignments();
+    }, [cid]);
+    const removeAssignment = async (assignmentId: string) => {
+      await assignmentsClient.deleteAssignment(assignmentId)
+      dispatch(deleteAssignment(assignmentId))
+    }
+
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const isFaculty = (currentUser.role === "FACULTY") 
     return (
@@ -27,7 +41,6 @@ export default function Assignments() {
               </div>
             <ListGroup className="rounded-0">
             {assignments
-          .filter((assignment: any) => assignment.course === cid)
           .map((assignment: any) => (
 
           
@@ -43,7 +56,7 @@ export default function Assignments() {
                     <div><span className="text-danger">Multiple Modules</span> | <span className="fw-bold">Not Available until </span>{assignment.available_date} |</div>
                     <div><span className="fw-bold">Due </span> {assignment.due_date} | {assignment.points} pts</div>
                     </div>
-                <AssignmentControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => dispatch(deleteAssignment(assignmentId))} />
+                <AssignmentControlButtons assignmentId={assignment._id} deleteAssignment={(assignmentId) => removeAssignment(assignmentId)} />
               </ListGroup.Item>
               ))}
               </ListGroup>

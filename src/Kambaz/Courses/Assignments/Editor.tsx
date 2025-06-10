@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router";
 import { addAssignment, updateAssignment } from "./reducer";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import * as coursesClient from "../../Courses/client"
+import * as assignmentsClient from "./client"
 
 export default function AssignmentEditor() {
   const { aid, cid } =  useParams()
@@ -31,14 +33,16 @@ export default function AssignmentEditor() {
       }
   } : assignment)
 
-  const SaveAssignment = () => {
+  const SaveAssignment = async () => {
     console.log(formData)
     if (isNew) {
-      dispatch(addAssignment(formData))
+      const newAssignment = await coursesClient.createAssignmentForCourse(cid, formData)
+      dispatch(addAssignment(newAssignment))
     }
 
     else {
-      dispatch(updateAssignment(formData))
+      const updatedAssignment = await assignmentsClient.updateAssignment(formData);
+      dispatch(updateAssignment(updatedAssignment))
     }
   }
     return (

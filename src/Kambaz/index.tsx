@@ -6,17 +6,18 @@ import Courses from "./Courses";
 import AssignmentEditor from "./Courses/Assignments/Editor";
 import "./styles.css"
 import ProtectedRoute from "./Account/ProtectedRoute";
+import Session from "./Account/Session";
 
 export default function Kambaz() {
     return (
+      <Session>
       <div id="wd-kambaz">
               <KambazNavigation />
               <div className="wd-main-content-offset p-3">
               <Routes>
                 <Route path="/" element={<Navigate to="/Kambaz/Account" />} />
                 <Route path="/Account/*" element={<Account />} />
-                <Route path="/Dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>
-} />
+                <Route path="/Dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
                 <Route path="/Courses/:cid/*" element={<ProtectedRoute><Courses /></ProtectedRoute>} />
                 <Route path="/Courses/:cid/Assignments/:aid" element={<ProtectedRoute><AssignmentEditor /></ProtectedRoute>} />
                 <Route path="/Calendar" element={<h1>Calendar</h1>} />
@@ -24,6 +25,7 @@ export default function Kambaz() {
               </Routes>
               </div>
       </div>
+      </Session>
   );}
   
   
