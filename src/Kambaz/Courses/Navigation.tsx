@@ -1,10 +1,22 @@
 import { Link, useParams, useLocation } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import * as coursesClient from "./client";
+import { setCourses } from "./reducer"
+import { useEffect } from "react";
 
 export default function CourseNavigation() {
   const { cid } = useParams();
   const { courses } = useSelector((state: any) => state.coursesReducer)
+  const dispatch = useDispatch();
+  const fetchCourses = async () => {
+    const courses = await coursesClient.fetchAllCourses();
+    dispatch(setCourses(courses));
+  };
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
   const course = courses.find((course: any) => course._id === cid);
   const { pathname } = useLocation();
   const links = ["Home", "Modules", "Piazza", "Zoom", "Assignments", "Quizzes", "Grades", "People"];
